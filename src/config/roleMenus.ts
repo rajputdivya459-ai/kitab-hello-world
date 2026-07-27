@@ -47,6 +47,7 @@ export const adminMenu: NavGroup[] = [
   {
     id: 'school', label: 'School ERP', icon: School, items: [
       { href: '/admin/course-structure', label: 'Course Structure', icon: GraduationCap },
+      { href: '/admin/timetable',        label: 'Timetable Studio', icon: CalendarRange },
       { href: '/admin/students',         label: 'Students',         icon: UserCheck },
       { href: '/admin/student-requests', label: 'Student Requests', icon: UserPen },
       { href: '/admin/attendance',       label: 'Attendance',       icon: CalendarCheck },
@@ -101,6 +102,7 @@ export const principalMenu: NavGroup[] = [
       { href: '/admin/attendance', label: 'Attendance',  icon: CalendarCheck },
       { href: '/admin/results',    label: 'Results',     icon: Award },
       { href: '/admin/exams',      label: 'Exams',       icon: ClipboardList },
+      { href: '/admin/timetable',  label: 'Timetable',   icon: CalendarRange },
       { href: '/admin/analytics',  label: 'Reports',     icon: PieChart },
     ],
   },
