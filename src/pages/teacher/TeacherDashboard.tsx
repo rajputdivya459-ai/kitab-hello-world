@@ -1,8 +1,12 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTeacherCtx } from '@/contexts/TeacherContext';
 import { BookOpen, CalendarCheck, ClipboardList, Bell, GraduationCap } from 'lucide-react';
 import { PortalSkeleton } from '@/components/portal/PortalSkeleton';
+import { TodaySchedule } from '@/components/timetable/TodaySchedule';
+import { publishedFor } from '@/lib/timetable/api';
+import { getCollection } from '@/mock/db';
 
 export default function TeacherDashboard() {
   const { loading, teacher, assignments, classMap, sectionMap, subjectMap } = useTeacherCtx();
@@ -73,6 +77,14 @@ export default function TeacherDashboard() {
           ))}
         </CardContent></Card>
       </div>
+
+      <TeacherTodayWidget />
     </div>
   );
+}
+
+function TeacherTodayWidget() {
+  const teacherNames = useMemo(() => Object.fromEntries(getCollection<any>('teachers').map((t: any) => [t.id, t.name])), []);
+  const tt = publishedFor('10', 'A');
+  return <TodaySchedule timetable={tt} teacherNames={teacherNames} title="Today's Classes (10-A)" />;
 }
