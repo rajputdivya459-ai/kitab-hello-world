@@ -62,6 +62,10 @@ import AdminApprovals from "./pages/admin/AdminApprovals";
 import AdminAuditLog from "./pages/admin/AdminAuditLog";
 import AdminStudentRequests from "./pages/admin/AdminStudentRequests";
 import AdminFinanceRequests from "./pages/admin/AdminFinanceRequests";
+import AdminTimetable from "./pages/admin/AdminTimetable";
+import StudentTimetable from "./pages/student/StudentTimetable";
+import ParentTimetable from "./pages/parent/ParentTimetable";
+import TeacherTimetable from "./pages/teacher/TeacherTimetable";
 import PrincipalDashboard from "./pages/principal/PrincipalDashboard";
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
 import StaffDashboardPage from "./pages/staff/StaffDashboard";
@@ -172,6 +176,7 @@ const App = () => (
                 ['audit-log', <AdminAuditLog />, 'audit.read'],
                 ['student-requests', <AdminStudentRequests />, 'students.write'],
                 ['finance-requests', <AdminFinanceRequests />, 'finance.write'],
+                ['timetable', <AdminTimetable />, 'timetable.read'],
                 ['profile', <MyProfile />, 'dashboard.read'],
               ] as Array<[string, JSX.Element, Action]>).map(([path, element, action]) => (
                 <Route key={path} path={`/admin/${path}`} element={<RequirePermission action={action}>{element}</RequirePermission>} />
@@ -198,6 +203,7 @@ const App = () => (
                 <Route path="results" element={<ParentResults />} />
                 <Route path="notices" element={<ParentNotices />} />
                 <Route path="transport" element={<ParentTransport />} />
+                <Route path="timetable" element={<ParentTimetable />} />
                 <Route path="profile" element={<MyProfile />} />
               </Route>
 
@@ -208,6 +214,7 @@ const App = () => (
                 <Route path="attendance" element={<StudentAttendance />} />
                 <Route path="fees" element={<StudentFees />} />
                 <Route path="results" element={<StudentResults />} />
+                <Route path="timetable" element={<StudentTimetable />} />
                 <Route path="notices" element={<StudentNotices />} />
                 <Route path="profile" element={<MyProfile />} />
               </Route>
@@ -217,6 +224,7 @@ const App = () => (
               <Route path="/teacher" element={<TeacherShell />}>
                 <Route path="dashboard" element={<TeacherDashboard />} />
                 <Route path="classes" element={<TeacherClasses />} />
+                <Route path="timetable" element={<TeacherTimetable />} />
                 <Route path="attendance" element={<TeacherAttendance />} />
                 <Route path="marks" element={<TeacherMarks />} />
                 <Route path="homework" element={<TeacherHomework />} />

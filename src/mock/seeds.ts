@@ -98,6 +98,50 @@ export const mockWorkflows = [
   },
 ];
 
+// Sample published timetable for Class 10-A so read-only portals work immediately.
+function buildSeedTimetable() {
+  const days: Array<'Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'> = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+  const slots = [
+    { start: '08:00', end: '08:45', kind: 'class' as const },
+    { start: '08:45', end: '09:30', kind: 'class' as const },
+    { start: '09:30', end: '09:45', kind: 'break' as const, subject: 'Short Break' },
+    { start: '09:45', end: '10:30', kind: 'class' as const },
+    { start: '10:30', end: '11:15', kind: 'class' as const },
+    { start: '11:15', end: '11:45', kind: 'break' as const, subject: 'Lunch' },
+    { start: '11:45', end: '12:30', kind: 'class' as const },
+    { start: '12:30', end: '13:15', kind: 'class' as const },
+    { start: '13:15', end: '14:00', kind: 'class' as const },
+  ];
+  const rotation = [
+    { subject: 'Mathematics', teacherId: 't_1', room: 'R-101' },
+    { subject: 'English',     teacherId: 't_2', room: 'R-102' },
+    { subject: 'Science',     teacherId: 't_3', room: 'Lab-1' },
+    { subject: 'Social',      teacherId: 't_1', room: 'R-101' },
+    { subject: 'Hindi',       teacherId: 't_2', room: 'R-102' },
+    { subject: 'PE',          teacherId: 't_3', room: 'Ground' },
+  ];
+  const periods: any[] = [];
+  days.forEach((d, di) => {
+    slots.forEach((s, si) => {
+      const id = `p_${d}_${si}`;
+      if (s.kind === 'break') {
+        periods.push({ id, day: d, index: si, start: s.start, end: s.end, kind: 'break', subject: s.subject });
+      } else {
+        const r = rotation[(di + si) % rotation.length];
+        periods.push({ id, day: d, index: si, start: s.start, end: s.end, kind: 'class', ...r });
+      }
+    });
+  });
+  const now = new Date().toISOString();
+  return {
+    id: 'tt_seed_10a', kind: 'academic', status: 'published', version: 1,
+    academicYear: '2026-27', className: '10', section: 'A',
+    workingDays: days, startTime: '08:00', endTime: '14:00',
+    periodDuration: 45, breakDuration: 15, breakCount: 2,
+    periods, createdAt: now, updatedAt: now, publishedAt: now, createdBy: 'u_admin',
+  };
+}
+
 export const SEEDS = {
   users: mockUsers,
   students: mockStudents,
@@ -106,5 +150,6 @@ export const SEEDS = {
   staff: mockStaff,
   accountants: mockAccountants,
   workflows: mockWorkflows,
+  timetables: [buildSeedTimetable()],
   audit_log: [],
 };

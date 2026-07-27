@@ -1,108 +1,69 @@
-# Phase 7 — Role-Based Workspace & Identity Management
+# Phase 7.4 — Smart Timetable & Exam Scheduler
 
-Architecture-only phase. No Supabase Auth changes, no multi-tenant work. Existing modules stay intact; new role shells sit alongside the current admin app and share the existing shared components (DataTable, DataToolbar, permissions engine, notify).
+This is a large module. To ship it well without breaking existing modules, I'll build it in **3 iterative slices** on top of the existing engines (Permissions, Workflow, Notifications, Audit, Mock DB). Please confirm the slice order or tell me to compress.
 
-## 1. Mock runtime layer (LocalStorage)
+## Architecture
 
-New folder `src/mock/`:
-- `users.ts`, `students.ts`, `parents.ts`, `teachers.ts`, `staff.ts`, `accountants.ts` — seed arrays.
-- `db.ts` — generic LocalStorage CRUD (`getCollection`, `setCollection`, `upsert`, `remove`, `resetAll`, `seedIfEmpty`).
-- Keys namespaced `erp.mock.<collection>`.
+- **Data layer**: LocalStorage collections via `src/mock/db.ts`
+  - `timetables` — versioned records (draft/published/archived)
+  - `timetable_templates` — reusable presets
+  - `exam_schedules` — exam timetable records
+  - `invigilations` — invigilator assignments
+  - `rooms`, `subjects_catalog`, `teacher_availability` (seeds)
+- **Engine (`src/lib/timetable/`)**
+  - `types.ts` — TimetableRecord, Period, ExamSlot, Conflict, GeneratorInput
+  - `generator.ts` — constraint-based scheduler (greedy + backtracking) for academic timetable
+  - `examGenerator.ts` — exam date/slot allocator
+  - `invigilation.ts` — balanced invigilator assignment
+  - `validators.ts` — teacher/room/overlap conflict detection
+  - `templates.ts` — Primary/Middle/High/5-day/6-day presets
+  - `versioning.ts` — draft/publish/archive/duplicate/restore/diff
+  - `api.ts` — CRUD wrapping mock db + workflow submit/publish
+- **Workflow**: new modules `timetable.change`, `exam.schedule` wired into `workflowApply.ts`
+- **Notifications**: reuse `notify.ts` with new events (`timetable.published`, `period.changed`, `exam.published`, `extra_class.added`)
+- **Permissions**: add actions `timetable.read|write|publish`, `exam.schedule.write`, `invigilation.assign` in `permissions.ts` + role menus
 
-On app boot (`main.tsx`) call `seedIfEmpty()` — never overwrite existing data.
+## UI
 
-Dev actions exposed in the Role Switcher panel: **Load Mock Data**, **Clear Runtime Data**, **Reset Runtime Database**.
+- **Admin** (`/admin/timetable`)
+  - Wizard (`GeneratorWizard`) — inputs → preview → conflicts → save draft/submit
+  - `TimetableGrid` — drag-drop (dnd-kit) with swap/edit period modal
+  - Version panel, template picker, print/export (uses `src/lib/pdf.ts`)
+  - `/admin/exams/schedule` — exam wizard + invigilation planner
+- **Teacher** (`/teacher/timetable`)
+  - Class-scoped editor for assigned classes only, quick extra-class scheduler
+  - Dashboard widgets: Today's Classes, Next Class, Upcoming Exams
+- **Student / Parent** — read-only Today, Weekly, Exams, Holidays views (mobile-first)
+- **Views**: Daily / Weekly / Monthly / Teacher / Class / Room / Exam / Print — all derived from same dataset via selectors
 
-## 2. Mock auth + session
+## Delivery slices
 
-`src/auth/mockAuth.ts`:
-- `signIn(username, password)` → validates against mock users, stores `erp.session` = `{ userId, role, rememberMe, issuedAt }`.
-- `signOut()`, `getSession()`, `getCurrentUser()`.
-- `resetPassword(userId, newPassword)` (mock).
+**Slice A — Core engine + academic timetable (this turn)**
+- types, generator, validators, templates, versioning, api
+- Admin timetable page: wizard, weekly grid (drag-drop swap), conflicts panel, versions, publish via workflow, print/PDF/CSV
+- Seed: classes 1–10, sections A/B, subjects, teachers, working days, sample published weekly timetable
+- Permissions + roleMenus + workflowApply integration + notifications + audit
+- Student/Parent/Teacher read-only "Today/Weekly" widgets
 
-`src/auth/SessionProvider.tsx` — React context exposing `{ user, role, profile, signIn, signOut, switchRole }`. Wraps existing `AuthProvider` (Supabase stays untouched); new provider is the source of truth for role/profile in Phase 7 UI. `useRole()` gets a thin adapter so existing components keep working.
+**Slice B — Exam scheduler + invigilation**
+- Exam generator, invigilation planner, admin exam page, exam view + print
+- Seed: Quarterly / Half-Yearly / Annual / Monthly Test schedules
+- Notifications on exam publish
 
-Profile linking: each mock user has `profileId` + `profileType` → resolves to student/parent/teacher/staff row.
+**Slice C — Polish**
+- Teacher class-scoped editor with extra/revision class scheduling
+- Version compare/restore UI, custom template save
+- Monthly + Room + Calendar views, full mobile pass
 
-## 3. Central Identity & Access module
+## Technical notes
 
-New route `/admin/identity` (permission `identity.write`, admin-only):
-- Uses shared DataTable + DataToolbar + Pagination + EmptyState.
-- Columns: Name, Username, Email, Mobile, Role, Status, Last Login, Created.
-- Actions: Create, Edit, Activate/Deactivate, Reset Password, Assign Role, Delete.
-- Search + role/status filters + CSV export.
-- Backed by mock `users` collection.
+- Generator uses weighted constraint satisfaction: hard constraints (teacher/room conflicts, timing) reject; soft constraints (difficulty spread, no back-to-back same subject) score candidates.
+- Extensible timetable types via a registry in `types.ts` (no code change to add a new type — just register key + label).
+- All writes go through workflow `submit()` when `requireApproval` flag set; else direct publish with audit entry.
+- Drag-drop uses `@dnd-kit/core` (need to add).
 
-Add `identity.read` / `identity.write` to `src/lib/permissions.ts` (admin only).
+## Confirm before I start
 
-## 4. Role Switcher (dev-only)
-
-Floating panel bottom-right, visible when `import.meta.env.DEV`:
-- Dropdown of all 7 roles → signs in as first mock user of that role.
-- Buttons: Load Mock, Clear, Reset DB.
-
-## 5. Role workspaces (shells + dashboards + sidebars)
-
-Reuse existing shells where possible. Sidebar items are generated from a per-role menu registry (`src/config/roleMenus.ts`) filtered through the permission engine.
-
-New shells + dashboards (each with a role-specific KPI dashboard, not the admin one):
-- **Principal** — `/principal/*` shell, dashboard (school KPIs, pending approvals), Students/Staff/Attendance/Results/Reports/Leaves/Admissions (reuse admin pages read-only via `useCan`).
-- **Accountant** — `/accountant/*` shell, finance-only dashboard, Fees/Expenses/Salaries/Receipts/Reports.
-- **Staff** — `/staff/*` shell, generic dashboard driven by granted permissions.
-- **Teacher / Parent / Student** — reuse existing shells + dashboards; refresh sidebars from new registry.
-- **Admin** — existing shell; add Identity & Access link.
-
-Route protection: existing `<RequirePermission>` on all admin routes; add same wrapper on new shells' child routes. Add a `<RequireRole>` layer at each shell root so URL access is blocked cross-role.
-
-Each dashboard is a small dedicated component under `src/components/dashboards/` (PrincipalKPIs, AccountantKPIs, StaffKPIs). Teacher/Parent/Student dashboards already exist — leave logic, only ensure they use their role's data scope.
-
-## 6. Permission expansion
-
-Extend `Action` type + matrix in `src/lib/permissions.ts`:
-- `identity.read`, `identity.write` (admin only)
-- `admissions.read`, `admissions.write` (admin, principal)
-- `expenses.read`, `expenses.write`, `salaries.read`, `salaries.write` (admin, accountant)
-
-Grant lists per role updated. `principal`, `accountant`, `staff` become real routable roles (previously matrix-only).
-
-## 7. Scope enforcement (UI level)
-
-- Teacher pages already filter by assigned classes via `TeacherContext` — keep.
-- Parent pages filter by children via `ParentContext` — keep.
-- Student pages filter by `StudentContext` — keep.
-- Principal/Accountant/Staff read only — hide write buttons through `useCan`.
-
-## 8. Files
-
-**New (~18):**
-- `src/mock/{db,users,students,parents,teachers,staff,accountants}.ts`
-- `src/auth/{mockAuth,SessionProvider,RoleSwitcher}.tsx`
-- `src/config/roleMenus.ts`
-- `src/layouts/{PrincipalShell,AccountantShell,StaffShell}.tsx`
-- `src/pages/principal/{PrincipalLogin,PrincipalDashboard,...}.tsx` (dashboard + thin wrappers reusing admin pages)
-- `src/pages/accountant/{AccountantLogin,AccountantDashboard,...}.tsx`
-- `src/pages/staff/{StaffLogin,StaffDashboard}.tsx`
-- `src/pages/admin/AdminIdentity.tsx`
-- `src/components/dashboards/{PrincipalKPIs,AccountantKPIs,StaffKPIs}.tsx`
-
-**Edited:**
-- `src/App.tsx` — mount new routes + Role Switcher, wrap `<SessionProvider>`.
-- `src/main.tsx` — call `seedIfEmpty`.
-- `src/lib/permissions.ts` — new actions.
-- `src/lib/roleRoutes.ts` — add principal/accountant/staff.
-- `src/layouts/AdminLayout.tsx` — add Identity & Access nav.
-- `src/hooks/useRole.tsx` — adapter reading session first, DB second.
-
-## 9. Out of scope
-
-- Real Supabase Auth changes (existing admin login flow stays as backup).
-- Multi-tenant, org tables, RLS changes.
-- New business modules.
-- Email/SMS/push channels.
-- Replacing shared components.
-
-## 10. Verification
-
-- `tsgo` typecheck clean.
-- Playwright smoke: sign in as each role via Role Switcher, verify sidebar contents differ, cross-role URL access redirects to role home.
-- Existing admin flows (Finance record, Attendance save, Identity CRUD) still work.
+1. OK to ship **Slice A first** this turn, then B and C in follow-ups? (Doing all three in one turn risks a huge diff and shallow QA.)
+2. OK to add `@dnd-kit/core` + `@dnd-kit/sortable` dependencies?
+3. Should timetable publish **require approval** by default (workflow → pending) or publish directly with audit?

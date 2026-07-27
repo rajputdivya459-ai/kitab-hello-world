@@ -35,6 +35,7 @@ export type Action =
   | 'expenses.read' | 'expenses.write'
   | 'salaries.read' | 'salaries.write'
   | 'approvals.read' | 'approvals.write'
+  | 'timetable.read' | 'timetable.write' | 'timetable.publish'
   | 'audit.read';
 
 
@@ -55,6 +56,7 @@ const ALL: Action[] = [
   'admissions.read','admissions.write',
   'expenses.read','expenses.write','salaries.read','salaries.write',
   'approvals.read','approvals.write','audit.read',
+  'timetable.read','timetable.write','timetable.publish',
 ];
 
 
@@ -71,6 +73,7 @@ const PRINCIPAL: Action[] = [
   'reminders.read','analytics.read','reports.read','messages.read',
   'admissions.read','admissions.write',
   'approvals.read','approvals.write','audit.read',
+  'timetable.read','timetable.write','timetable.publish',
 ];
 
 const ACCOUNTANT: Action[] = [
@@ -93,10 +96,11 @@ const TEACHER: Action[] = [
   'results.read','results.write',
   'homework.read','homework.write',
   'notices.read','notifications.read',
+  'timetable.read','timetable.write',
 ];
 
-const PARENT: Action[] = ['attendance.read','finance.read','results.read','notifications.read','notices.read'];
-const STUDENT: Action[] = ['attendance.read','finance.read','results.read','notifications.read','notices.read'];
+const PARENT: Action[] = ['attendance.read','finance.read','results.read','notifications.read','notices.read','timetable.read'];
+const STUDENT: Action[] = ['attendance.read','finance.read','results.read','notifications.read','notices.read','timetable.read'];
 
 export const PERMISSIONS: Record<string, Action[]> = {
   admin: ALL,
