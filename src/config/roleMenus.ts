@@ -52,6 +52,7 @@ export const adminMenu: NavGroup[] = [
       { href: '/admin/student-requests', label: 'Student Requests', icon: UserPen },
       { href: '/admin/attendance',       label: 'Attendance',       icon: CalendarCheck },
       { href: '/admin/exams',            label: 'Exams',            icon: ClipboardList },
+      { href: '/admin/exam-scheduler',   label: 'Exam Scheduler',   icon: ClipboardList },
       { href: '/admin/results',          label: 'Results',          icon: Award },
       { href: '/admin/finance',          label: 'Finance',          icon: IndianRupee },
       { href: '/admin/finance-requests', label: 'Finance Requests', icon: Wallet },
