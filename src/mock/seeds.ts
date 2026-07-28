@@ -142,6 +142,72 @@ function buildSeedTimetable() {
   };
 }
 
+// -------- Rooms & Invigilators seed --------
+const seedRooms = [
+  { id: 'rm_101', number: '101', capacity: 40, block: 'A', available: true },
+  { id: 'rm_102', number: '102', capacity: 40, block: 'A', available: true },
+  { id: 'rm_103', number: '103', capacity: 35, block: 'A', available: true },
+  { id: 'rm_201', number: '201', capacity: 50, block: 'B', available: true },
+  { id: 'rm_202', number: '202', capacity: 50, block: 'B', available: true },
+  { id: 'rm_hall', number: 'Hall', capacity: 120, block: 'Main', available: true },
+];
+const seedInvigilators = [
+  { id: 't_1', name: 'P. Patil', role: 'teacher', available: true },
+  { id: 't_2', name: 'A. Iyer',  role: 'teacher', available: true },
+  { id: 't_3', name: 'N. Rao',   role: 'teacher', available: true },
+  { id: 'st_1', name: 'M. Jadhav', role: 'staff', available: true },
+  { id: 'st_2', name: 'K. Nair',   role: 'staff', available: true },
+];
+
+// -------- Sample exam schedules --------
+function buildExam(kind: string, title: string, startOffsetDays: number, subjects: string[], classes: string[], sections: string[], status: 'draft' | 'published' | 'pending') {
+  const start = new Date(Date.now() + startOffsetDays * 86400_000);
+  const startDate = start.toISOString().slice(0, 10);
+  const end = new Date(Date.now() + (startOffsetDays + subjects.length + 3) * 86400_000);
+  const endDate = end.toISOString().slice(0, 10);
+  const slots: any[] = [];
+  let idx = 0;
+  classes.forEach(cls => {
+    sections.forEach(sec => {
+      subjects.forEach((sub, i) => {
+        const d = new Date(start.getTime() + i * 86400_000);
+        if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+        const room = seedRooms[(i + idx) % seedRooms.length];
+        const inv1 = seedInvigilators[(i + idx) % seedInvigilators.length];
+        const inv2 = seedInvigilators[(i + idx + 2) % seedInvigilators.length];
+        slots.push({
+          id: `es_${kind}_${cls}${sec}_${i}`,
+          date: d.toISOString().slice(0, 10), start: '09:00', end: '12:00',
+          subject: sub, className: cls, section: sec,
+          roomIds: [room.id], invigilatorIds: [inv1.id, inv2.id], duration: 180,
+        });
+        idx++;
+      });
+    });
+  });
+  const now = new Date().toISOString();
+  return {
+    id: `ex_seed_${kind}`, kind, status, version: 1,
+    academicYear: '2026-27', title,
+    classes, sections, subjects,
+    startDate, endDate,
+    examDuration: 180, breakDuration: 30, dailyLimit: 1,
+    holidays: [], workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    preferredStart: '09:00',
+    roomIds: seedRooms.map(r => r.id), invigilatorIds: seedInvigilators.map(i => i.id),
+    slots, createdAt: now, updatedAt: now,
+    publishedAt: status === 'published' ? now : undefined,
+    createdBy: 'u_admin',
+  };
+}
+
+const seedExamSchedules = [
+  buildExam('quarterly', 'Quarterly Examination — 2026-27', 7, ['Mathematics', 'English', 'Science', 'Social', 'Hindi'], ['9', '10'], ['A', 'B'], 'published'),
+  buildExam('half_yearly', 'Half-Yearly Examination — 2026-27', 60, ['Mathematics', 'English', 'Science', 'Social', 'Hindi', 'PE'], ['9', '10'], ['A'], 'draft'),
+  buildExam('annual', 'Annual Examination — 2026-27', 180, ['Mathematics', 'English', 'Science', 'Social', 'Hindi'], ['8', '9', '10'], ['A', 'B'], 'pending'),
+  buildExam('monthly_test', 'Monthly Test — August', 21, ['Mathematics', 'English'], ['10'], ['A', 'B'], 'published'),
+];
+
 export const SEEDS = {
   users: mockUsers,
   students: mockStudents,
@@ -151,5 +217,8 @@ export const SEEDS = {
   accountants: mockAccountants,
   workflows: mockWorkflows,
   timetables: [buildSeedTimetable()],
+  rooms: seedRooms,
+  invigilators: seedInvigilators,
+  exam_schedules: seedExamSchedules,
   audit_log: [],
 };

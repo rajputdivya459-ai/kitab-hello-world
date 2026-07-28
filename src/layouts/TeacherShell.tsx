@@ -11,6 +11,7 @@ const navItems = [
   { to: '/teacher/attendance', label: 'Attend', icon: CalendarCheck },
   { to: '/teacher/marks', label: 'Marks', icon: ClipboardList },
   { to: '/teacher/homework', label: 'HW', icon: BookOpen },
+  { to: '/teacher/invigilation', label: 'Invigilation', icon: ClipboardList },
   { to: '/teacher/notices', label: 'Notice', icon: Bell },
   { to: '/teacher/profile', label: 'Me', icon: User },
 ];
