@@ -181,6 +181,7 @@ const App = () => (
                 ['student-requests', <AdminStudentRequests />, 'students.write'],
                 ['finance-requests', <AdminFinanceRequests />, 'finance.write'],
                 ['timetable', <AdminTimetable />, 'timetable.read'],
+                ['exam-scheduler', <AdminExamScheduler />, 'exams.read'],
                 ['profile', <MyProfile />, 'dashboard.read'],
               ] as Array<[string, JSX.Element, Action]>).map(([path, element, action]) => (
                 <Route key={path} path={`/admin/${path}`} element={<RequirePermission action={action}>{element}</RequirePermission>} />
@@ -208,6 +209,7 @@ const App = () => (
                 <Route path="notices" element={<ParentNotices />} />
                 <Route path="transport" element={<ParentTransport />} />
                 <Route path="timetable" element={<ParentTimetable />} />
+                <Route path="exams" element={<ParentExams />} />
                 <Route path="profile" element={<MyProfile />} />
               </Route>
 
@@ -219,6 +221,7 @@ const App = () => (
                 <Route path="fees" element={<StudentFees />} />
                 <Route path="results" element={<StudentResults />} />
                 <Route path="timetable" element={<StudentTimetable />} />
+                <Route path="exams" element={<StudentExams />} />
                 <Route path="notices" element={<StudentNotices />} />
                 <Route path="profile" element={<MyProfile />} />
               </Route>
@@ -229,6 +232,7 @@ const App = () => (
                 <Route path="dashboard" element={<TeacherDashboard />} />
                 <Route path="classes" element={<TeacherClasses />} />
                 <Route path="timetable" element={<TeacherTimetable />} />
+                <Route path="invigilation" element={<TeacherInvigilation />} />
                 <Route path="attendance" element={<TeacherAttendance />} />
                 <Route path="marks" element={<TeacherMarks />} />
                 <Route path="homework" element={<TeacherHomework />} />
