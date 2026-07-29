@@ -54,4 +54,4 @@ export const mockUsers: MockUser[] = [
 ];
 
 // Bump when seed data shape/credentials change so existing installs re-seed.
-export const SEED_VERSION = '7.4.0';
+export const SEED_VERSION = '7.4.3';
