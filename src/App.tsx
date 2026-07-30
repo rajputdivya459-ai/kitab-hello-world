@@ -64,6 +64,7 @@ import AdminStudentRequests from "./pages/admin/AdminStudentRequests";
 import AdminFinanceRequests from "./pages/admin/AdminFinanceRequests";
 import AdminTimetable from "./pages/admin/AdminTimetable";
 import AdminExamScheduler from "./pages/admin/AdminExamScheduler";
+import AdminExamMaster from "./pages/admin/AdminExamMaster";
 import StudentTimetable from "./pages/student/StudentTimetable";
 import StudentExams from "./pages/student/StudentExams";
 import ParentTimetable from "./pages/parent/ParentTimetable";
