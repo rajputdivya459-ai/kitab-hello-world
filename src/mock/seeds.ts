@@ -206,6 +206,84 @@ const seedExamSchedules = [
   buildExam('half_yearly', 'Half-Yearly Examination — 2026-27', 60, ['Mathematics', 'English', 'Science', 'Social', 'Hindi', 'PE'], ['9', '10'], ['A'], 'draft'),
   buildExam('annual', 'Annual Examination — 2026-27', 180, ['Mathematics', 'English', 'Science', 'Social', 'Hindi'], ['8', '9', '10'], ['A', 'B'], 'pending'),
   buildExam('monthly_test', 'Monthly Test — August', 21, ['Mathematics', 'English'], ['10'], ['A', 'B'], 'published'),
+  buildExam('unit_test', 'Unit Test I — 2026-27', 3, ['Mathematics', 'Science'], ['9', '10'], ['A', 'B'], 'published'),
+];
+
+// -------- Phase 7.5: Exam Master records (linked to the schedules above) --------
+const SUBJECT_META: Record<string, { code: string; practical?: boolean }> = {
+  Mathematics: { code: 'MTH' }, English: { code: 'ENG' }, Science: { code: 'SCI', practical: true },
+  Social: { code: 'SST' }, Hindi: { code: 'HIN' }, PE: { code: 'PED', practical: true },
+};
+
+const defaultInstructions = {
+  general: 'Reach the examination hall 30 minutes before the reporting time.\nCarry your school ID card and hall ticket.\nWrite your roll number clearly on every answer sheet.\nNo candidate is allowed to leave the hall in the first 45 minutes.',
+  allowedMaterials: 'Blue/black pen, pencil, geometry box, hall ticket',
+  reportingTime: '08:30',
+  uniform: 'Full school uniform with polished shoes is mandatory',
+  calculator: 'Non-programmable calculators allowed for Class 9 & 10 Science only',
+  mobilePolicy: 'Mobile phones and smart watches are strictly prohibited inside the hall',
+  attendanceRules: 'Minimum 75% attendance required to appear for the examination',
+};
+
+function buildExamMaster(
+  schedule: any,
+  name: string,
+  type: string,
+  status: string,
+  coordinator: { id: string; name: string },
+  visible: boolean,
+) {
+  const now = new Date().toISOString();
+  const abbr: Record<string, string> = { unit_test: 'UT', monthly_test: 'MT', quarterly: 'QE', half_yearly: 'HY', annual: 'AE' };
+  return {
+    id: `em_seed_${type}`,
+    code: `${abbr[type] ?? 'EX'}-2026-27-01`,
+    name,
+    academicYear: '2026-27',
+    type,
+    description: `${name} conducted as per the CBSE academic calendar.`,
+    status,
+    startDate: schedule.startDate,
+    endDate: schedule.endDate,
+    workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    holidays: [],
+    coordinatorId: coordinator.id,
+    coordinatorName: coordinator.name,
+    classes: schedule.classes,
+    sections: schedule.sections,
+    wholeSchool: false,
+    subjects: schedule.subjects.map((s: string, i: number) => ({
+      id: `sub_${type}_${i}`,
+      name: s,
+      code: `${SUBJECT_META[s]?.code ?? s.slice(0, 3).toUpperCase()}-${schedule.classes[0]}`,
+      maxMarks: type === 'unit_test' || type === 'monthly_test' ? 25 : 100,
+      passingMarks: type === 'unit_test' || type === 'monthly_test' ? 9 : 35,
+      duration: type === 'unit_test' || type === 'monthly_test' ? 60 : 180,
+      isPractical: !!SUBJECT_META[s]?.practical,
+      category: SUBJECT_META[s]?.practical ? 'practical' : i < 3 ? 'mandatory' : 'optional',
+    })),
+    instructions: defaultInstructions,
+    visible,
+    scheduleId: schedule.id,
+    roomIds: seedRooms.map(r => r.id),
+    invigilatorIds: seedInvigilators.map(i => i.id),
+    createdAt: now,
+    updatedAt: now,
+    publishedAt: status === 'published' ? now : undefined,
+    createdBy: 'u_admin',
+  };
+}
+
+const COORD_PRINCIPAL = { id: 'st_princ', name: 'Dr. R. Kulkarni — Principal' };
+const COORD_T1 = { id: 't_1', name: 'P. Patil' };
+const COORD_T2 = { id: 't_2', name: 'A. Iyer' };
+
+const seedExamMasters = [
+  buildExamMaster(seedExamSchedules[4], 'Unit Test I — 2026-27', 'unit_test', 'published', COORD_T1, true),
+  buildExamMaster(seedExamSchedules[3], 'Monthly Test — August', 'monthly_test', 'published', COORD_T2, true),
+  buildExamMaster(seedExamSchedules[0], 'Quarterly Examination — 2026-27', 'quarterly', 'published', COORD_PRINCIPAL, true),
+  buildExamMaster(seedExamSchedules[1], 'Half-Yearly Examination — 2026-27', 'half_yearly', 'draft', COORD_T1, false),
+  buildExamMaster(seedExamSchedules[2], 'Annual Examination — 2026-27', 'annual', 'pending', COORD_PRINCIPAL, false),
 ];
 
 export const SEEDS = {
@@ -220,5 +298,6 @@ export const SEEDS = {
   rooms: seedRooms,
   invigilators: seedInvigilators,
   exam_schedules: seedExamSchedules,
+  exam_masters: seedExamMasters,
   audit_log: [],
 };

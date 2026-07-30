@@ -64,6 +64,7 @@ import AdminStudentRequests from "./pages/admin/AdminStudentRequests";
 import AdminFinanceRequests from "./pages/admin/AdminFinanceRequests";
 import AdminTimetable from "./pages/admin/AdminTimetable";
 import AdminExamScheduler from "./pages/admin/AdminExamScheduler";
+import AdminExamMaster from "./pages/admin/AdminExamMaster";
 import StudentTimetable from "./pages/student/StudentTimetable";
 import StudentExams from "./pages/student/StudentExams";
 import ParentTimetable from "./pages/parent/ParentTimetable";
@@ -182,6 +183,7 @@ const App = () => (
                 ['finance-requests', <AdminFinanceRequests />, 'finance.write'],
                 ['timetable', <AdminTimetable />, 'timetable.read'],
                 ['exam-scheduler', <AdminExamScheduler />, 'exams.read'],
+                ['exam-master', <AdminExamMaster />, 'exams.read'],
                 ['profile', <MyProfile />, 'dashboard.read'],
               ] as Array<[string, JSX.Element, Action]>).map(([path, element, action]) => (
                 <Route key={path} path={`/admin/${path}`} element={<RequirePermission action={action}>{element}</RequirePermission>} />
