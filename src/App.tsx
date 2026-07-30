@@ -183,6 +183,7 @@ const App = () => (
                 ['finance-requests', <AdminFinanceRequests />, 'finance.write'],
                 ['timetable', <AdminTimetable />, 'timetable.read'],
                 ['exam-scheduler', <AdminExamScheduler />, 'exams.read'],
+                ['exam-master', <AdminExamMaster />, 'exams.read'],
                 ['profile', <MyProfile />, 'dashboard.read'],
               ] as Array<[string, JSX.Element, Action]>).map(([path, element, action]) => (
                 <Route key={path} path={`/admin/${path}`} element={<RequirePermission action={action}>{element}</RequirePermission>} />
