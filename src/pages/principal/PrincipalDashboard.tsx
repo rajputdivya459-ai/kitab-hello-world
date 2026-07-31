@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, UserCheck, Award, CalendarRange, UserPlus, ClipboardList, TrendingUp, Bell, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { MarksDashboardWidget } from '@/components/marks/MarksDashboardWidget';
 
 const kpis = [
   { label: 'Attendance Today', value: '92%', trend: '+1.2%', icon: UserCheck, tone: 'text-emerald-600' },
@@ -48,6 +49,7 @@ export default function PrincipalDashboard() {
           ))}
         </div>
 
+        <MarksDashboardWidget role="principal" />
         <div className="grid lg:grid-cols-3 gap-4">
           <Card className="p-4 lg:col-span-2">
             <h3 className="font-semibold mb-3 text-sm">Quick Actions</h3>

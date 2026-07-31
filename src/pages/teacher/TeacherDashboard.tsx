@@ -5,6 +5,8 @@ import { useTeacherCtx } from '@/contexts/TeacherContext';
 import { BookOpen, CalendarCheck, ClipboardList, Bell, GraduationCap } from 'lucide-react';
 import { PortalSkeleton } from '@/components/portal/PortalSkeleton';
 import { TodaySchedule } from '@/components/timetable/TodaySchedule';
+import { MarksDashboardWidget } from '@/components/marks/MarksDashboardWidget';
+import { getCurrentUser } from '@/auth/mockAuth';
 import { publishedFor } from '@/lib/timetable/api';
 import { getCollection } from '@/mock/db';
 
@@ -35,6 +37,7 @@ export default function TeacherDashboard() {
         </CardContent>
       </Card>
 
+      <MarksDashboardWidget role="teacher" teacherId={getCurrentUser()?.profileId} to="/teacher/marks-entry" />
       <div className="grid grid-cols-2 gap-3">
         <Card><CardContent className="p-4">
           <p className="text-xs text-muted-foreground">My Classes</p>
