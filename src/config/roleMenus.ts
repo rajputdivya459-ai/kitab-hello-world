@@ -54,6 +54,7 @@ export const adminMenu: NavGroup[] = [
       { href: '/admin/exams',            label: 'Exams',            icon: ClipboardList },
       { href: '/admin/exam-scheduler',   label: 'Exam Scheduler',   icon: ClipboardList },
       { href: '/admin/exam-master',      label: 'Exam Master',      icon: ClipboardList },
+      { href: '/admin/marks',            label: 'Marks Entry',      icon: ClipboardList },
       { href: '/admin/results',          label: 'Results',          icon: Award },
       { href: '/admin/finance',          label: 'Finance',          icon: IndianRupee },
       { href: '/admin/finance-requests', label: 'Finance Requests', icon: Wallet },
