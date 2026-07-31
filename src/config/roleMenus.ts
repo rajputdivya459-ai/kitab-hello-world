@@ -106,6 +106,7 @@ export const principalMenu: NavGroup[] = [
       { href: '/admin/exams',           label: 'Exams',       icon: ClipboardList },
       { href: '/admin/exam-scheduler',  label: 'Exam Scheduler', icon: ClipboardList },
       { href: '/admin/exam-master',     label: 'Exam Master',    icon: ClipboardList },
+      { href: '/admin/marks',           label: 'Marks Entry',    icon: ClipboardList },
       { href: '/admin/timetable',       label: 'Timetable',   icon: CalendarRange },
       { href: '/admin/analytics',  label: 'Reports',     icon: PieChart },
     ],
