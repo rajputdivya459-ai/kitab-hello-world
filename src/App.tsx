@@ -240,6 +240,7 @@ const App = () => (
                 <Route path="invigilation" element={<TeacherInvigilation />} />
                 <Route path="attendance" element={<TeacherAttendance />} />
                 <Route path="marks" element={<TeacherMarks />} />
+                <Route path="marks-entry" element={<TeacherMarksEntry />} />
                 <Route path="homework" element={<TeacherHomework />} />
                 <Route path="notices" element={<TeacherNotices />} />
                 <Route path="profile" element={<TeacherProfile />} />
