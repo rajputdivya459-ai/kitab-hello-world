@@ -52,7 +52,7 @@ const COMPONENTS = {
   full_100: [
     { id: 'theory', label: 'Theory', max: 100, required: true, decimals: 0, enabled: true },
   ],
-} as const;
+};
 
 const iso = (offsetDays: number) => new Date(Date.now() + offsetDays * 86400_000).toISOString();
 
@@ -65,7 +65,7 @@ function buildSheet(
   status: 'draft' | 'submitted' | 'returned' | 'approved' | 'published',
   fillRatio = 1,
 ) {
-  const comps = COMPONENTS[schemeId] as any[];
+  const comps = COMPONENTS[schemeId].map(c => ({ ...c }));
   const students = seedRoster.filter(s => s.classId === classId && s.section === section);
   const rows = students.map((st, i) => {
     const filled = i < Math.round(students.length * fillRatio);
