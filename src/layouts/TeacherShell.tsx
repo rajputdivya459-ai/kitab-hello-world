@@ -9,7 +9,7 @@ const navItems = [
   { to: '/teacher/timetable', label: 'Time', icon: Clock },
   { to: '/teacher/classes', label: 'Classes', icon: BookOpen },
   { to: '/teacher/attendance', label: 'Attend', icon: CalendarCheck },
-  { to: '/teacher/marks', label: 'Marks', icon: ClipboardList },
+  { to: '/teacher/marks-entry', label: 'Marks', icon: ClipboardList },
   { to: '/teacher/homework', label: 'HW', icon: BookOpen },
   { to: '/teacher/invigilation', label: 'Invigilation', icon: ClipboardList },
   { to: '/teacher/notices', label: 'Notice', icon: Bell },

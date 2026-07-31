@@ -1,4 +1,5 @@
 import { mockUsers } from './users';
+import { seedRoster, seedTeacherSubjects, seedMarksSheets, seedMarksHistory } from './marksSeeds';
 
 // Light seeds — real academic data still comes from Supabase. These exist so
 // mock profiles resolve without hitting the backend during Phase 7 UI testing.
@@ -299,5 +300,9 @@ export const SEEDS = {
   invigilators: seedInvigilators,
   exam_schedules: seedExamSchedules,
   exam_masters: seedExamMasters,
+  marks_roster: seedRoster,
+  teacher_subjects: seedTeacherSubjects,
+  marks_sheets: seedMarksSheets,
+  marks_history: seedMarksHistory,
   audit_log: [],
 };

@@ -14,6 +14,7 @@ import {
  import { Skeleton } from '@/components/common/Skeleton';
  import { DashboardWidgets } from '@/components/admin/DashboardWidgets';
  import { ExecutiveKPIs } from '@/components/admin/ExecutiveKPIs';
+import { MarksDashboardWidget } from '@/components/marks/MarksDashboardWidget';
 
  
  interface StatCardProps {
@@ -106,6 +107,7 @@ import {
          </div>
  
           <ExecutiveKPIs />
+          <MarksDashboardWidget role="admin" />
 
           {/* Stats Grid */}
           {isLoading ? (

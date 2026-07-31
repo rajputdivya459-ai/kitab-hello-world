@@ -65,6 +65,7 @@ import AdminFinanceRequests from "./pages/admin/AdminFinanceRequests";
 import AdminTimetable from "./pages/admin/AdminTimetable";
 import AdminExamScheduler from "./pages/admin/AdminExamScheduler";
 import AdminExamMaster from "./pages/admin/AdminExamMaster";
+import AdminMarks from "./pages/admin/AdminMarks";
 import StudentTimetable from "./pages/student/StudentTimetable";
 import StudentExams from "./pages/student/StudentExams";
 import ParentTimetable from "./pages/parent/ParentTimetable";
@@ -98,6 +99,7 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherClasses from "./pages/teacher/TeacherClasses";
 import TeacherAttendance from "./pages/teacher/TeacherAttendance";
 import TeacherMarks from "./pages/teacher/TeacherMarks";
+import TeacherMarksEntry from "./pages/teacher/TeacherMarksEntry";
 import TeacherHomework from "./pages/teacher/TeacherHomework";
 import TeacherNotices from "./pages/teacher/TeacherNotices";
 import TeacherProfile from "./pages/teacher/TeacherProfile";
@@ -184,6 +186,7 @@ const App = () => (
                 ['timetable', <AdminTimetable />, 'timetable.read'],
                 ['exam-scheduler', <AdminExamScheduler />, 'exams.read'],
                 ['exam-master', <AdminExamMaster />, 'exams.read'],
+                ['marks', <AdminMarks />, 'marks.read'],
                 ['profile', <MyProfile />, 'dashboard.read'],
               ] as Array<[string, JSX.Element, Action]>).map(([path, element, action]) => (
                 <Route key={path} path={`/admin/${path}`} element={<RequirePermission action={action}>{element}</RequirePermission>} />
@@ -237,6 +240,7 @@ const App = () => (
                 <Route path="invigilation" element={<TeacherInvigilation />} />
                 <Route path="attendance" element={<TeacherAttendance />} />
                 <Route path="marks" element={<TeacherMarks />} />
+                <Route path="marks-entry" element={<TeacherMarksEntry />} />
                 <Route path="homework" element={<TeacherHomework />} />
                 <Route path="notices" element={<TeacherNotices />} />
                 <Route path="profile" element={<TeacherProfile />} />

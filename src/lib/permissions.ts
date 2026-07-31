@@ -12,6 +12,7 @@ export type Action =
   | 'attendance.read' | 'attendance.write'
   | 'finance.read' | 'finance.write'
   | 'results.read' | 'results.write'
+  | 'marks.read' | 'marks.write' | 'marks.approve' | 'marks.publish' | 'marks.lock'
   | 'exams.read' | 'exams.write'
   | 'inquiries.read' | 'inquiries.write'
   | 'visitors.read' | 'visitors.write'
@@ -44,6 +45,7 @@ const ALL: Action[] = [
   'students.read','students.write','staff.read','staff.write',
   'attendance.read','attendance.write','finance.read','finance.write',
   'results.read','results.write','exams.read','exams.write',
+  'marks.read','marks.write','marks.approve','marks.publish','marks.lock',
   'inquiries.read','inquiries.write','visitors.read','visitors.write',
   'certificates.read','certificates.write','notifications.read','notifications.write',
   'notices.read','notices.write','homework.read','homework.write',
@@ -65,6 +67,7 @@ const PRINCIPAL: Action[] = [
   'students.read','staff.read',
   'attendance.read','attendance.write',
   'results.read','results.write','exams.read',
+  'marks.read','marks.write','marks.approve','marks.publish','marks.lock',
   'certificates.read','certificates.write',
   'notifications.read','notifications.write',
   'notices.read','notices.write','homework.read',
@@ -94,6 +97,7 @@ const TEACHER: Action[] = [
   'dashboard.read','students.read',
   'attendance.read','attendance.write',
   'results.read','results.write',
+  'marks.read','marks.write',
   'homework.read','homework.write',
   'notices.read','notifications.read',
   'timetable.read','timetable.write',
