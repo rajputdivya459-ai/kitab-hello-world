@@ -36,3 +36,15 @@ export function currentChildren(): LinkedStudent[] {
   const kids = ids.map(rosterStudent).filter(Boolean) as LinkedStudent[];
   return kids.length ? kids : listRoster().slice(0, 1);
 }
+
+/** Resolve a portal student (or child) to the roster id the Results engine uses. */
+export function linkedStudentId(portalId?: string | null, admissionNo?: string | null): string {
+  if (portalId && rosterStudent(portalId)) return portalId;
+  if (portalId && STUDENT_LINK[portalId]) return STUDENT_LINK[portalId];
+  if (admissionNo) {
+    const byAdm = listRoster().find(s => s.admissionNo === admissionNo);
+    if (byAdm) return byAdm.id;
+  }
+  return currentStudent()?.id ?? portalId ?? '';
+}
+
