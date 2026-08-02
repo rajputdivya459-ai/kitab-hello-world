@@ -10,6 +10,8 @@ const navItems = [
   { to: '/teacher/classes', label: 'Classes', icon: BookOpen },
   { to: '/teacher/attendance', label: 'Attend', icon: CalendarCheck },
   { to: '/teacher/marks-entry', label: 'Marks', icon: ClipboardList },
+  { to: '/teacher/results', label: 'Results', icon: Award },
+
   { to: '/teacher/homework', label: 'HW', icon: BookOpen },
   { to: '/teacher/invigilation', label: 'Invigilation', icon: ClipboardList },
   { to: '/teacher/notices', label: 'Notice', icon: Bell },
