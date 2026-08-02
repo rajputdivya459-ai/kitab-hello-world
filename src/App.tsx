@@ -100,6 +100,8 @@ import TeacherClasses from "./pages/teacher/TeacherClasses";
 import TeacherAttendance from "./pages/teacher/TeacherAttendance";
 import TeacherMarks from "./pages/teacher/TeacherMarks";
 import TeacherMarksEntry from "./pages/teacher/TeacherMarksEntry";
+import TeacherResults from "./pages/teacher/TeacherResults";
+
 import TeacherHomework from "./pages/teacher/TeacherHomework";
 import TeacherNotices from "./pages/teacher/TeacherNotices";
 import TeacherProfile from "./pages/teacher/TeacherProfile";
@@ -241,6 +243,8 @@ const App = () => (
                 <Route path="attendance" element={<TeacherAttendance />} />
                 <Route path="marks" element={<TeacherMarks />} />
                 <Route path="marks-entry" element={<TeacherMarksEntry />} />
+                <Route path="results" element={<TeacherResults />} />
+
                 <Route path="homework" element={<TeacherHomework />} />
                 <Route path="notices" element={<TeacherNotices />} />
                 <Route path="profile" element={<TeacherProfile />} />
