@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Home, BookOpen, CalendarCheck, ClipboardList, Bell, User, Clock } from 'lucide-react';
+import { Home, BookOpen, CalendarCheck, ClipboardList, Bell, User, Clock, Award } from 'lucide-react';
 import { RequireRole } from '@/components/RequireRole';
 import { PortalLayout } from '@/layouts/PortalLayout';
 import { TeacherProvider, useTeacherCtx } from '@/contexts/TeacherContext';
