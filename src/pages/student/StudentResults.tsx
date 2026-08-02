@@ -1,22 +1,13 @@
 import { useStudentCtx } from '@/contexts/StudentContext';
-import { ResultsView } from '@/components/portal/ResultsView';
 import { PortalSkeleton } from '@/components/portal/PortalSkeleton';
 import { EmptyState } from '@/components/portal/EmptyState';
 import { GraduationCap } from 'lucide-react';
+import { StudentResultsPanel } from '@/components/results/StudentResultsPanel';
+import { linkedStudentId } from '@/lib/results/portalLink';
 
 export default function StudentResults() {
-  const { loading, student, classMap, sectionMap } = useStudentCtx();
+  const { loading, student } = useStudentCtx();
   if (loading) return <PortalSkeleton />;
   if (!student) return <EmptyState icon={GraduationCap} title="Student record not linked" />;
-  return (
-    <ResultsView
-      studentId={student.id}
-      studentName={student.name}
-      classId={student.class_id}
-      sectionId={student.section_id}
-      admissionNumber={student.admission_number}
-      classMap={classMap}
-      sectionMap={sectionMap}
-    />
-  );
+  return <StudentResultsPanel studentId={linkedStudentId(student.id, student.admission_number)} title="My Results" />;
 }
